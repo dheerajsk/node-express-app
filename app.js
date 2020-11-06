@@ -1,39 +1,24 @@
+const path = require('path');
 
 const express = require('express');
-// express exports a function, hence use it as funciton
-const app = express();
 const bodyParser = require('body-parser');
 
-// ()=>{} function will be executed for every incoming reques.
-// app.use((req, res, next)=>{
-//     console.log("middleware");
-//     // Call next middleware
-//     next();
-// });
+const app = express();
 
-//it will do body parsing and then call next middleware
-app.use(bodyParser.urlencoded({extended: false}));
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
-app.use('/add-product', (req, res, next) => {
-    res.send('<form action="/product" method="POST"><input name="title" type="text"> <button type="submit">Add Product</button></form>')
+const adminData = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/admin', adminData.routes);
+app.use(shopRoutes);
+
+app.use((req, res, next) => {
+  res.status(404).render('404', { pageTitle: 'Page Not Found' });
 });
-
-app.post('/product', (req, res, next) => {
-    // will be undefined without parser.
-    console.log(req.body);
-    console.log("middleware 2");
-    res.send({ name: "hello" })
-});
-
-app.use('/', (req, res, next) => {
-    console.log("middleware 3");
-    res.send({ name: "he" })
-});
-
 
 app.listen(3300);
-
-// or
-// const server = http.createServer(app);
-
-// server.listen(3300);
