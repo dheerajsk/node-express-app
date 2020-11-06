@@ -15,18 +15,18 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use('/add-product', (req, res, next) => {
-    res.send('<form action="/product" method="POST"><input name="title" type="text" /> <button type="submit">Add Product</button></form>')
+    res.send('<form action="/product" method="POST"><input name="title" type="text"> <button type="submit">Add Product</button></form>')
 });
 
-app.use('/product', (req, res, next) => {
+app.post('/product', (req, res, next) => {
     // will be undefined without parser.
     console.log(req.body);
     console.log("middleware 2");
-    res.send({ name: "he" })
+    res.send({ name: "hello" })
 });
 
 app.use('/', (req, res, next) => {
-    console.log("middleware 2");
+    console.log("middleware 3");
     res.send({ name: "he" })
 });
 
